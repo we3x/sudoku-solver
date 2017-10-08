@@ -38,16 +38,15 @@ class SudokuBoard(object):
 
     def load_training_set(self):
         data = []
-        for color in self.colors:
-            for number in self.numbers:
-                    path = './images/numbers/'+number+'.png'
-                    label = number
-                    component_core = cv2.imread(path)
-                    component_gs = cv2.cvtColor(component_core, cv2.COLOR_RGB2GRAY)
-                    ret, component_bin = cv2.threshold(component_gs, 130, 255, cv2.THRESH_BINARY)
-                    component = cv2.resize(component_bin, (30, 30))
-                    vector = np.array(component).ravel()
-                    data.append({'label': label, 'sample': vector})
+        for number in self.numbers:
+                path = './images/numbers/'+number+'.png'
+                label = number
+                component_core = cv2.imread(path)
+                component_gs = cv2.cvtColor(component_core, cv2.COLOR_RGB2GRAY)
+                ret, component_bin = cv2.threshold(component_gs, 130, 255, cv2.THRESH_BINARY)
+                component = cv2.resize(component_bin, (30, 30))
+                vector = np.array(component).ravel()
+                data.append({'label': label, 'sample': vector})
         return data
 
     def recognize(self):
