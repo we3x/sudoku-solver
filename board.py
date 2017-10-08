@@ -14,6 +14,7 @@ class SudokuBoard(object):
         self.EigenNumberSudoku = PCAModel()
         self.EigenNumberSudoku.train(self.data)
         self.image_bin = self.prepare_image()
+        self.clear_line(0,0)
         self.recognize()
 
     def init_board(self):
@@ -29,6 +30,22 @@ class SudokuBoard(object):
             [0, 0, 0, 0, 0, 0, 0, 0, 0]
         ]
         return board
+
+    def clear_line(self,a,b):
+        theStack = [ (a, b) ]
+        while len(theStack) > 0:
+            x, y = theStack.pop()
+            if self.image_bin[x][y] == 255:
+                continue
+            self.image_bin[x][y] = 255
+            if (x < 269):
+                theStack.append( (x + 1, y) )
+            if (x > 0):
+                theStack.append( (x - 1, y) )
+            if (y < 269):
+                theStack.append( (x, y + 1) )
+            if (y > 0):
+                theStack.append( (x, y - 1) )
 
     def prepare_image(self):
         image_gs = cv2.cvtColor(self.image_core, cv2.COLOR_RGB2GRAY)
@@ -55,6 +72,10 @@ class SudokuBoard(object):
                 vector = np.array(self.image_bin[i*30:(i+1)*30, j*30:(j+1)*30]).ravel()
                 label, res = self.EigenNumberSudoku.classify(vector)
                 self.board[i][j] = (self.numbers.index(label)+1)
+                if (res > 1000 and label=="three"):
+                    self.board[i][j] = 5
+                if (res > 1200 and label=="one"):
+                    self.board[i][j] = 0
 
 
     def get_board(self):
