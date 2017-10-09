@@ -1,5 +1,6 @@
 import cv2
 from model import PCAModel
+from sudoku import soduko
 import numpy as np
 import math
 
@@ -16,6 +17,11 @@ class SudokuBoard(object):
         self.image_bin = self.prepare_image()
         self.clear_line(0,0)
         self.recognize()
+        self.str_board = self.prepare_board()
+        self.t = soduko(self.str_board)
+        self.t.one_level_supposition()
+        self.t.check()
+        self.board = self.str_to_int(self.t.as_test_list())
 
     def init_board(self):
         board = [
@@ -29,6 +35,30 @@ class SudokuBoard(object):
             [0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0]
         ]
+        return board
+
+    def prepare_board(self):
+        str_board = ["","","","","","","","",""]
+        for i in range(9):
+            for j in range(9):
+                str_board[i] += str(self.board[i][j])
+        return str_board
+
+    def str_to_int(self, str_board):
+        board = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0]
+        ]
+        for i in range(9):
+            for j in range(9):
+                board[i][j] = int(str_board[i][j])
         return board
 
     def clear_line(self,a,b):
