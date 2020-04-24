@@ -7,13 +7,15 @@ import math
 class SudokuBoard(object):
     numbers = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine"]
 
-    def __init__(self, path):
-        self.path = path
-        self.image_core = cv2.cvtColor(cv2.imread(path), cv2.COLOR_BGR2RGB)
-        self.board = self.init_board()
+    def __init__(self):
         self.data = self.load_training_set()
         self.EigenNumberSudoku = PCAModel()
         self.EigenNumberSudoku.train(self.data)
+
+    def solve(self, path):
+        self.path = path
+        self.image_core = cv2.cvtColor(cv2.imread(path), cv2.COLOR_BGR2RGB)
+        self.board = self.init_board()
         self.image_bin = self.prepare_image()
         self.clear_line(0,0)
         self.recognize()
@@ -22,6 +24,7 @@ class SudokuBoard(object):
         self.t.one_level_supposition()
         self.t.check()
         self.board = self.str_to_int(self.t.as_test_list())
+        return self.get_board()
 
     def init_board(self):
         board = [
